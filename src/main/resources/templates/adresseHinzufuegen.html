@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <div style="float:left;">
+        <title>Baumarktshop: Wollen Sie bauen? Dann bauen Sie auf uns!</title>
+    </div>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
+        integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+        crossorigin="anonymous"></script>
+</head>
+
+<style>
+    .center {
+        width: 200px;
+        height: 200px;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        margin-top: -200px;
+        margin-left: -100px;
+    }
+
+    body {
+        text-align: center;
+    }
+
+    .red {
+        color:red;
+    }
+
+    .responsive {
+        width: 100%;
+        height: auto;
+    }
+</style>
+
+<body>
+    <h1 style="margin-top: 20px; margin-bottom: 20px; background-color:orange">Baumarktshop: Adresse hinzufügen</h1>
+    <div class="center">
+        <label>Postleitzahl</label>
+        <input type="text" id="plz" placeholder="Postleitzahl eingeben..." />
+        <label>Ort</label>
+        <input type="text" id="ort" placeholder="Ort eingeben..." />
+        <label>Strasse</label>
+        <input type="text" id="strasse" placeholder="Strasse eingeben..." />
+        <label>Hausnummer</label>
+        <input type="text" id="hausnr" placeholder="Hausnummer eingeben..." />
+        <p></p>
+        <button type="submit" class="btn btn-success" onclick="adresseHinzufuegen()">Hinzufügen</button>
+        <button type="button" class="btn btn-danger" id="edit"
+            onclick="window.location.href = '/web.baumarkt-shop/kunde/{kunde}/einstellung'">Zurück</button>
+        <p></p>
+        <p id="no plz" class="red">Postleitzahl größer gleich 1 Zeichen und kleiner gleich 10 Zeichen zu wählen</p>
+        <p id="no ort" class="red">Ort größer gleich 1 Zeichen und kleiner gleich 25 Zeichen zu wählen</p>
+        <p id="no strasse" class="red">Strasse größer gleich 1 Zeichen und kleiner gleich 40 Zeichen zu wählen</p>
+        <p id="no hausnr" class="red">Hausnummer größer gleich 1 Zeichen und kleiner gleich 6 Zeichen zu wählen</p>
+        <script>
+            document.getElementById("no plz").style.display = "none";
+            document.getElementById("no ort").style.display = "none";
+            document.getElementById("no strasse").style.display = "none";
+            document.getElementById("no hausnr").style.display = "none";
+        </script>
+    </div>
+</body>
+
+<script>
+    async function adresseHinzufuegen() {
+        var ort = $('#ort').val();
+        var plz = $('#plz').val();
+        var strasse = $('#strasse').val();
+        var hausnr = $('#hausnr').val();
+
+        const data = { "plz": plz, "ort": ort, "strasse": strasse, "hausnr": hausnr };
+
+        document.getElementById("no plz").style.display = "none";
+        if (plz == "" || plz.length > 10) {
+            document.getElementById("no plz").style.display = "inline";
+            return;
+        }
+        document.getElementById("no ort").style.display = "none";
+        if (ort == "" || ort.length > 25) {
+            document.getElementById("no ort").style.display = "inline";
+            return;
+        }
+        document.getElementById("no strasse").style.display = "none";
+        if (strasse == "" || strasse.length > 40) {
+            document.getElementById("no strasse").style.display = "inline";
+            return;
+        }
+        document.getElementById("no hausnr").style.display = "none";
+        if (hausnr == "" || hausnr.length > 6) {
+            document.getElementById("no hausnr").style.display = "inline";
+            return;
+        }
+
+        await fetch('http://localhost:8080/baumarkt-shop/kunde/{kunde}/adresse', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),
+        })
+        window.location.href = "http://localhost:8080/web.baumarkt-shop/kunde/{kunde}/einstellung"
+    }
+</script>
+
+</html>

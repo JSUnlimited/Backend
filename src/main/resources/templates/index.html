@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <div style="float:left;">
+        <title>Baumarktshop: Wollen Sie bauen? Dann bauen Sie auf uns!</title>
+    </div>
+    <div style="float:right;">
+        <input type="text" id="suchbegriff" placeholder="Suchbegriff/ID eingeben..." /><button
+            onclick="sucheNachSuchbegriff()">Suche</button>
+        <button id="login" type="button" class="btn btn-success"
+            onclick="window.location.href = '/web.baumarkt-shop/user'">Login</button>
+        <button id="regist" type="button" class="btn btn-primary"
+            onclick="window.location.href = '/web.baumarkt-shop/user/regist'">Registrieren</button>
+        <button id="logout" type="button" class="btn btn-danger" onclick="logout()">Logout</button>
+        <script>
+            if (localStorage.getItem('data') == null) {
+                document.getElementById("login").style.display = "inline";
+                document.getElementById("regist").style.display = "inline";
+                document.getElementById("logout").style.display = "none";
+            } else {
+                document.getElementById("login").style.display = "none";
+                document.getElementById("regist").style.display = "none";
+                document.getElementById("logout").style.display = "inline";
+            }
+        </script>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW"
+        crossorigin="anonymous"></script>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
+        integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+        crossorigin="anonymous"></script>
+</head>
+
+<style>
+    .red {
+        color:red;
+    }
+
+    .responsive {
+        width: 100%;
+        height: auto;
+    }
+</style>
+
+<body>
+    <h1 style="margin-top: 20px; margin-bottom: 20px;">Baumarktshop: Unser Angebot</h1>
+    <table class=" table table-striped">
+        <thead>
+            <tr style="background-color:orange">
+                <th scope="col">WarenID</th>
+                <th scope="col">Name</th>
+                <th scope="col">Option</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {#for ware in waren}
+            <td>{ware.warenId}</td>
+            <td>{ware.name}</td>
+            <td><button id="details" type="button" class="btn btn-primary"
+                    onclick="window.location.href = '/web.baumarkt-shop/ware/{ware.warenId}'">Details</button></td>
+        </tbody>
+        {/for}
+    </table>
+</body>
+
+<p></p>
+<p id="no search" class ="red">Suchbegriff kleiner gleich 20 Zeichen zu wählen</p>
+<script>
+    document.getElementById("no search").style.display = "none";
+</script>
+
+<script>
+    function logout() {
+        localStorage.clear();
+        window.location.href = "http://localhost:8080/web.baumarkt-shop";
+    }
+
+    function sucheNachSuchbegriff() {
+        var suchbegriff = $('#suchbegriff').val();
+
+        document.getElementById("no search").style.display = "none";
+        if (suchbegriff.length > 20) {
+            document.getElementById("no search").style.display = "inline";
+            return;
+        }
+
+        const data = { "suchbegriff": suchbegriff };
+        window.location.href = "http://localhost:8080/web.baumarkt-shop/suche?such=" + suchbegriff;
+    }
+</script>
+
+</html>
